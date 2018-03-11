@@ -3,13 +3,66 @@ import resolvers from './resolvers'
 
 const typeDefs = `
   type Query {
-    TwitchGames(offset:Int): [TwitchGame]
-    TwitchClips(game: String): [TwitchClip]
+    TwitchGames(limit:Int, offset:Int): TwitchGamesResult
+    TwitchClips(game: String, cursor:String, limit:Int): TwitchClipResult
+    OddSubjects: [OddshotSubjects]
+    OddShots(name: String!, type: String!, after: String): [OddSubjectShots]
+    mockSubjects: [OddshotSubjects]
+    mockShots: [OddSubjectShots]
+  }
+  
+  type TwitchGamesResult {
+    offset: Int
+    game : [TwitchGame]
+  }
+  
+  type TwitchClipResult {
+    cursor: String
+    clip: [TwitchClip]
+  }
+  
+  type OddshotSubjects {
+    id: String
+    name: String
+    cover: String
+    avatar: String
+    followersCount: Int
+    next: String
+  }
+  
+  type OddSubjectShots {
+   name: String
+   createdDate: String
+   thumbnail: String
+   viewsCount: Int
+   score: Int
+   next: String
+   renditions: [OddShotRenditions]
+   streamer: Streamer
+   subject: OddShotSubject
+  }
+  
+  type OddshotProvider {
+    name: String
+  }
+  
+  type OddShotRenditions {
+    url: String
+    type: String
+  }
+  
+  type Streamer {
+    name: String
+    provider: OddshotProvider
+  }
+  
+  type OddShotSubject {
+    name: String
   }
   
   type Language {
     code: String
-  }
+  },
   
   type TwitchGame {
     name: String
@@ -35,6 +88,7 @@ const typeDefs = `
     duration: Float
     create_at: String
     thumbnails: TwitchThumbnails
+    mp4: String
   }
   
   type TwitchBox {

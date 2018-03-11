@@ -12,7 +12,7 @@ functions:
     events:
     - http:
         path: graphql
-        method: get
+        method: any
         cors: true
 
 plugins:

@@ -1,25 +1,25 @@
-import { FetchTwitchData} from './fetchapi'
+import {FetchOddshotData, FetchTwitchData} from './fetchapi'
 
 const resolvers = {
   Query: {
     TwitchGames: (_, args) => (
-      FetchTwitchData.getGames(args.offset)
-        .then(res => (
-          prepare(res.paging, res.data)
-        ))
+      FetchTwitchData.getGames(args.limit, args.offset)
+        .then(res => {
+          return {offset: res.paging.next, game: res.data}
+        })
     ),
     TwitchClips: (_, args) => (
-      FetchTwitchData.getClips(args.game)
-        .then(res => (
-          prepare(res.paging, res.data)
-        ))
+      FetchTwitchData.getClips(args.game, args.cursor, args.limit)
+        .then(res => {
+          return {cursor: res.paging.next, clip: setMP4(res.data)}
+        })
     )
   }
 }
 
-const prepare = (nextSet, data) => (
+const setMP4 = (data) => (
   data.map( item => {
-    item.next = nextSet.next
+    item.mp4 = item.thumbnails.medium.replace(/(-preview).*/, ".mp4")
     return item
   })
 )
