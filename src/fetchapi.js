@@ -15,7 +15,7 @@ export const FetchTwitchData = {
       .then(res => res.json())
       .then(res => ({
           data: res.top.map(item => item.game),
-          paging: {next: querystring.parse(res._links.next).offset}
+          paging: {next: (res._links != null ? querystring.parse(res._links.next).offset : 0)}
         })
       )
   },
